@@ -11,19 +11,18 @@ services:
   triggerdotdev:
     image: ghcr.io/triggerdotdev/trigger.dev:latest
     container_name: triggerdotdev
-    platform: linux/amd64
     restart: always
     env_file:
       - .env
     ports:
-      - 3010:3000
+      - 3030:3000
     depends_on:
       - triggerdotdev-database
     networks:
       - app_network
   triggerdotdev-database:
     container_name: triggerdotdev-database
-    image: postgres:latest
+    image: postgres:14
     restart: always
     volumes:
       - database-data:/var/lib/postgresql/data/
