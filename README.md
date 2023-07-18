@@ -49,7 +49,7 @@ To create an again, login using "Magic Link" and the email with the sign-in link
 
 Our main docs are at [docs.trigger.dev](https://docs.trigger.dev/).
 
-Note, you'll need to ensure that you set the `apiUrl` to point at your local Trigger.dev platform. If you don't change the docker-compose.yml default then `apiUrl` should be `http://localhost:3030`.
+Note, you'll need to ensure that you set the [`apiUrl`](https://trigger.dev/docs/sdk/triggerclient/constructor#parameters) (usually set via the ` TRIGGER_API_URL` environment variable) to point at your local Trigger.dev at `http://localhost:3030`.
 
 ### Use the main tag
 
