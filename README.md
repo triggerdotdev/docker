@@ -45,7 +45,7 @@ docker-compose stop
 
 You should now be able to access the Trigger.dev dashboard at [http://localhost:3030](http://localhost:3030/).
 
-To create an again, login using "Magic Link" and the email with the sign-in link will be printing to the console output in the running `triggerdotdev` container.
+To create an account, login using "Magic Link" and the email with the sign-in link will be printing to the console output in the running `triggerdotdev` container.
 
 Our main docs are at [docs.trigger.dev](https://docs.trigger.dev/).
 
