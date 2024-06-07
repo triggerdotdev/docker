@@ -2,6 +2,8 @@
 
 If you want to run the Trigger.dev platform yourself, instead of using [our cloud product](https://trigger.dev), you can use this repository to get started.
 
+It's highly recommended you read our [self-hosting guide](https://trigger.dev/docs/v3/open-source-self-hosting), which contains more detailed instructions and will be more up-to-date.
+
 ## Local development
 
 If you want to self-host the Trigger.dev platform, when you're developing your web app locally you'll need to run the Trigger.dev platform locally as well.
@@ -15,41 +17,31 @@ git clone https://github.com/triggerdotdev/docker.git
 cd docker
 ```
 
-2. Create your .env file:
-
-```
-cp ./.env.example ./.env
+2. Run the start script and follow the prompts
+```bash
+./start.sh full # hint: you can append -d to run in detached mode
 ```
 
 3. Populate any missing .env file values. (See the .env.example file for more instructions)
 
-4. The ports in the `docker-compose.yml` file are set so they are less likely to clash with your local webapp – the platform runs on 3030 and the database is on 5433. If you need to change these ports, you'll need to update the `LOGIN_ORIGIN` `APP_ORIGIN` and `DATABASE_HOST` environment variables.
-
-### Starting the Docker containers
-
-1. Run docker-compose to start the Trigger.dev platform:
-
-```sh
-docker-compose up -d
-```
+4. The ports in the `docker-compose.yml` file are set so they are less likely to clash with your local webapp – the platform runs on 3040 and the database is on 5433. If you need to change these ports, you'll need to update the `LOGIN_ORIGIN`, `APP_ORIGIN` and `DATABASE_HOST` environment variables.
 
 ### Stopping the Docker containers
 
-1. Run docker-compose to stop the Trigger.dev platform:
-
-```
-docker-compose stop
+1. Run the stop script
+```bash
+./stop.sh full
 ```
 
 ### Getting started with using Trigger.dev
 
-You should now be able to access the Trigger.dev dashboard at [http://localhost:3030](http://localhost:3030/).
+You should now be able to access the Trigger.dev dashboard at [http://localhost:3040](http://localhost:3040/).
 
-To create an again, login using "Magic Link" and the email with the sign-in link will be printing to the console output in the running `triggerdotdev` container.
+To create an account, login using "Magic Link" and the email with the sign-in link will be printing to the console output in the running `triggerdotdev` container.
 
 Our main docs are at [docs.trigger.dev](https://docs.trigger.dev/).
 
-Note, you'll need to ensure that you set the [`apiUrl`](https://trigger.dev/docs/sdk/triggerclient/constructor#parameters) (usually set via the ` TRIGGER_API_URL` environment variable) to point at your local Trigger.dev at `http://localhost:3030`.
+Note, you'll need to ensure that you set the [`apiUrl`](https://trigger.dev/docs/sdk/triggerclient/constructor#parameters) (usually set via the ` TRIGGER_API_URL` environment variable) to point at your local Trigger.dev at `http://localhost:3040`.
 
 ### Use the main tag
 
