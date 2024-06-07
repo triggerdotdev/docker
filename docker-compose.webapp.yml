@@ -1,0 +1,49 @@
+x-env: &webapp-env
+  LOGIN_ORIGIN: https://${TRIGGER_DOMAIN:?Please set this in your .env file}
+  APP_ORIGIN: https://${TRIGGER_DOMAIN}
+  DEV_OTEL_EXPORTER_OTLP_ENDPOINT: https://${TRIGGER_DOMAIN}/otel
+
+volumes:
+  postgres-data:
+  redis-data:
+
+networks:
+  default:
+
+services:
+  webapp:
+    image: ghcr.io/triggerdotdev/trigger.dev:self-host-rc.2
+    restart: unless-stopped
+    env_file:
+      - .env
+    environment:
+      <<: *webapp-env
+    ports:
+      - 3040:3030
+    depends_on:
+      - postgres
+      - redis
+    networks:
+      - default
+
+  postgres:
+    image: postgres:16
+    restart: unless-stopped
+    volumes:
+      - redis-data:/var/lib/postgresql/data/
+    env_file:
+      - .env
+    networks:
+      - default
+    ports:
+      - 5433:5432
+
+  redis:
+    image: redis:7
+    restart: unless-stopped
+    volumes:
+      - redis-data:/data
+    networks:
+      - default
+    ports:
+      - 6389:6379
