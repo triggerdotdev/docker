@@ -9,7 +9,7 @@ networks:
 
 services:
   docker-provider:
-    image: ghcr.io/triggerdotdev/provider/docker:self-host-rc.2
+    image: ghcr.io/triggerdotdev/provider/docker:self-host-rc.3
     restart: unless-stopped
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
@@ -23,7 +23,7 @@ services:
       PLATFORM_SECRET: $PROVIDER_SECRET
 
   coordinator:
-    image: ghcr.io/triggerdotdev/coordinator:self-host-rc.2
+    image: ghcr.io/triggerdotdev/coordinator:self-host-rc.3
     restart: unless-stopped
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
