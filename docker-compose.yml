@@ -1,33 +1,89 @@
-version: "3"
+x-webapp-env: &webapp-env
+  LOGIN_ORIGIN: &trigger-url ${TRIGGER_PROTOCOL:-http}://${TRIGGER_DOMAIN:-localhost:3040}
+  APP_ORIGIN: *trigger-url
+  DEV_OTEL_EXPORTER_OTLP_ENDPOINT: &trigger-otel ${TRIGGER_PROTOCOL:-http}://${TRIGGER_DOMAIN:-localhost:3040}/otel
+
+x-worker-env: &worker-env
+  PLATFORM_HOST: webapp
+  PLATFORM_WS_PORT: 3030
+  SECURE_CONNECTION: "false"
+  OTEL_EXPORTER_OTLP_ENDPOINT: *trigger-otel
 
 volumes:
-  database-data:
+  postgres-data:
+  redis-data:
 
 networks:
-  app_network:
-    external: false
+  webapp:
 
 services:
-  triggerdotdev:
-    image: ghcr.io/triggerdotdev/trigger.dev:latest
-    container_name: triggerdotdev
-    restart: always
+  webapp:
+    image: ghcr.io/triggerdotdev/trigger.dev:self-host-rc.2
+    restart: unless-stopped
     env_file:
       - .env
+    environment:
+      <<: *webapp-env
     ports:
-      - 3030:3030
+      - 3040:3030
     depends_on:
-      - triggerdotdev-database
+      - postgres
+      - redis
     networks:
-      - app_network
-  triggerdotdev-database:
-    container_name: triggerdotdev-database
-    image: postgres:14
-    restart: always
+      - webapp
+
+  postgres:
+    image: postgres:16
+    restart: unless-stopped
     volumes:
-      - database-data:/var/lib/postgresql/data/
-    env_file: .env
+      - redis-data:/var/lib/postgresql/data/
+    env_file:
+      - .env
     networks:
-      - app_network
+      - webapp
     ports:
       - 5433:5432
+
+  redis:
+    image: redis:7
+    restart: unless-stopped
+    volumes:
+      - redis-data:/data
+    networks:
+      - webapp
+    ports:
+      - 6389:6379
+
+  docker-provider:
+    image: ghcr.io/triggerdotdev/provider/docker:self-host-rc.2
+    restart: unless-stopped
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    user: root
+    networks:
+      - webapp
+    depends_on:
+      - webapp
+    env_file:
+      - .env
+    environment:
+      <<: *worker-env
+      PLATFORM_SECRET: $PROVIDER_SECRET
+
+  coordinator:
+    image: ghcr.io/triggerdotdev/coordinator:self-host-rc.2
+    restart: unless-stopped
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    user: root
+    networks:
+      - webapp
+    depends_on:
+      - webapp
+    ports:
+      - 9020:9020
+    env_file:
+      - .env
+    environment:
+      <<: *worker-env
+      PLATFORM_SECRET: $COORDINATOR_SECRET
