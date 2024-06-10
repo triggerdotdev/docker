@@ -6,15 +6,16 @@ script_dir=$(dirname "$0")
 
 kind=$1
 
-if [ -z "$kind" ]; then
-    echo "Usage: $0 [full|webapp|worker] [docker-compose args]"
-    exit 1
+# shift if we have to
+if [ "$kind" = "full" ] || [ "$kind" = "webapp" ] || [ "$kind" = "worker" ]; then
+    shift
 fi
 
-if [ -n "$kind" ] && [ "$kind" != "full" ] && [ "$kind" != "webapp" ] && [ "$kind" != "worker" ]; then
-    echo "Invalid kind: $kind"
-    echo "Must be one of: full, webapp, worker"
-    exit 1
+echo $kind
+
+# default to full
+if [ -z "$kind" ] || ( [ "$kind" != "webapp" ] && [ "$kind" != "worker" ] ); then
+    kind="full"
 fi
 
 if [ "$kind" = "full" ]; then
@@ -25,5 +26,4 @@ else
     extra_args="-p=trigger-$kind"
 fi
 
-shift
 docker_compose -f "$compose_file" "$extra_args" down "$@"
