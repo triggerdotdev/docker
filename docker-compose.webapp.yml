@@ -12,7 +12,7 @@ networks:
 
 services:
   webapp:
-    image: ghcr.io/triggerdotdev/trigger.dev:self-host-rc.3
+    image: ghcr.io/triggerdotdev/trigger.dev:v3
     restart: unless-stopped
     env_file:
       - .env

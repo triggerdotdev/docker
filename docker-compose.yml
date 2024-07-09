@@ -18,7 +18,7 @@ networks:
 
 services:
   webapp:
-    image: ghcr.io/triggerdotdev/trigger.dev:self-host-rc.3
+    image: ghcr.io/triggerdotdev/trigger.dev:v3
     restart: unless-stopped
     env_file:
       - .env
@@ -55,7 +55,7 @@ services:
       - 6389:6379
 
   docker-provider:
-    image: ghcr.io/triggerdotdev/provider/docker:self-host-rc.3
+    image: ghcr.io/triggerdotdev/provider/docker:v3
     restart: unless-stopped
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
@@ -71,7 +71,7 @@ services:
       PLATFORM_SECRET: $PROVIDER_SECRET
 
   coordinator:
-    image: ghcr.io/triggerdotdev/coordinator:self-host-rc.3
+    image: ghcr.io/triggerdotdev/coordinator:v3
     restart: unless-stopped
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
