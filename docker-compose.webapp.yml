@@ -55,7 +55,7 @@ services:
     environment:
       DATABASE_URL: $DATABASE_URL
     networks:
-      - webapp
+      - default
     depends_on:
       - postgres
     ports:
