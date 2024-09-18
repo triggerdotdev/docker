@@ -19,8 +19,8 @@ networks:
 
 services:
   webapp:
-    image: ghcr.io/triggerdotdev/trigger.dev:v3
-    restart: unless-stopped
+    image: ghcr.io/triggerdotdev/trigger.dev:${TRIGGER_IMAGE_TAG:-v3}
+    restart: ${RESTART_POLICY:-unless-stopped}
     env_file:
       - .env
     environment:
@@ -34,8 +34,8 @@ services:
       - webapp
 
   postgres:
-    image: postgres:16
-    restart: unless-stopped
+    image: postgres:${POSTGRES_IMAGE_TAG:-16}
+    restart: ${RESTART_POLICY:-unless-stopped}
     volumes:
       - postgres-data:/var/lib/postgresql/data/
     env_file:
@@ -49,8 +49,8 @@ services:
       - wal_level=logical
 
   redis:
-    image: redis:7
-    restart: unless-stopped
+    image: redis:${REDIS_IMAGE_TAG:-7}
+    restart: ${RESTART_POLICY:-unless-stopped}
     volumes:
       - redis-data:/data
     networks:
@@ -59,8 +59,8 @@ services:
       - 6389:6379
 
   docker-provider:
-    image: ghcr.io/triggerdotdev/provider/docker:v3
-    restart: unless-stopped
+    image: ghcr.io/triggerdotdev/provider/docker:${TRIGGER_IMAGE_TAG:-v3}
+    restart: ${RESTART_POLICY:-unless-stopped}
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     user: root
@@ -75,8 +75,8 @@ services:
       PLATFORM_SECRET: $PROVIDER_SECRET
 
   coordinator:
-    image: ghcr.io/triggerdotdev/coordinator:v3
-    restart: unless-stopped
+    image: ghcr.io/triggerdotdev/coordinator:${TRIGGER_IMAGE_TAG:-v3}
+    restart: ${RESTART_POLICY:-unless-stopped}
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
     user: root
