@@ -2,7 +2,7 @@ x-webapp-env: &webapp-env
   LOGIN_ORIGIN: &trigger-url ${TRIGGER_PROTOCOL:-http}://${TRIGGER_DOMAIN:-localhost:3040}
   APP_ORIGIN: *trigger-url
   DEV_OTEL_EXPORTER_OTLP_ENDPOINT: &trigger-otel ${TRIGGER_PROTOCOL:-http}://${TRIGGER_DOMAIN:-localhost:3040}/otel
-  ELECTRIC_ORIGIN: http://electric:3060
+  ELECTRIC_ORIGIN: http://electric:3000
 
 x-worker-env: &worker-env
   PLATFORM_HOST: webapp
