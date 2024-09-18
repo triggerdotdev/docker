@@ -2,12 +2,16 @@
 
 docker_compose() {
     if docker compose >/dev/null 2>&1; then
+        set -x
         docker compose "$@"
     elif command -v docker-compose >/dev/null 2>&1; then
+        set -x
         docker-compose "$@"
     else
         echo Please install docker compose: https://docs.docker.com/compose/install/
     fi
+
+    set +x
 }
 
 generate_secrets() {
