@@ -2,7 +2,7 @@
 
 If you want to run the Trigger.dev platform yourself, instead of using [our cloud product](https://trigger.dev), you can use this repository to get started.
 
-It's highly recommended you read our [self-hosting guide](https://trigger.dev/docs/v3/open-source-self-hosting), which contains more detailed instructions and will be more up-to-date.
+It's highly recommended you read our [self-hosting guide](https://trigger.dev/docs/open-source-self-hosting), which contains more detailed instructions and will be more up-to-date.
 
 ## Local development
 
@@ -18,8 +18,9 @@ cd docker
 ```
 
 2. Run the start script and follow the prompts
+
 ```bash
-./start.sh full # hint: you can append -d to run in detached mode
+./start.sh # hint: you can append -d to run in detached mode
 ```
 
 3. Populate any missing .env file values. (See the .env.example file for more instructions)
@@ -29,8 +30,9 @@ cd docker
 ### Stopping the Docker containers
 
 1. Run the stop script
+
 ```bash
-./stop.sh full
+./stop.sh
 ```
 
 ### Getting started with using Trigger.dev
@@ -41,12 +43,4 @@ To create an account, login using "Magic Link" and the email with the sign-in li
 
 Our main docs are at [docs.trigger.dev](https://docs.trigger.dev/).
 
-Note, you'll need to ensure that you set the [`apiUrl`](https://trigger.dev/docs/sdk/triggerclient/constructor#parameters) (usually set via the ` TRIGGER_API_URL` environment variable) to point at your local Trigger.dev at `http://localhost:3040`.
-
-### Use the main tag
-
-The `ghcr.io/triggerdotdev/trigger.dev:latest` image is the latest official release of Trigger.dev. If you'd like to use the very newest changes, change the image to use our `main` tag in the `docker-compose.yml` file, like so:
-
-```yaml
-image: ghcr.io/triggerdotdev/trigger.dev:main
-```
+Note, you'll need to ensure that you configure the SDK to point at your self-hosted instance via the `TRIGGER_API_URL` environment variable. With the default settings and running everything locally you'd set it to `http://localhost:3040`.
