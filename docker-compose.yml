@@ -2,6 +2,7 @@ x-webapp-env: &webapp-env
   LOGIN_ORIGIN: &trigger-url ${TRIGGER_PROTOCOL:-http}://${TRIGGER_DOMAIN:-localhost:3040}
   APP_ORIGIN: *trigger-url
   DEV_OTEL_EXPORTER_OTLP_ENDPOINT: &trigger-otel ${TRIGGER_PROTOCOL:-http}://${TRIGGER_DOMAIN:-localhost:3040}/otel
+  ELECTRIC_ORIGIN: http://electric:3060
 
 x-worker-env: &worker-env
   PLATFORM_HOST: webapp
@@ -43,6 +44,9 @@ services:
       - webapp
     ports:
       - 5433:5432
+    command:
+      - -c
+      - wal_level=logical
 
   redis:
     image: redis:7
@@ -87,3 +91,15 @@ services:
     environment:
       <<: *worker-env
       PLATFORM_SECRET: $COORDINATOR_SECRET
+
+  electric:
+    image: electricsql/electric:${ELECTRIC_IMAGE_TAG:-latest}
+    restart: ${RESTART_POLICY:-unless-stopped}
+    environment:
+      DATABASE_URL: $DATABASE_URL
+    networks:
+      - webapp
+    depends_on:
+      - postgres
+    ports:
+      - "3061:3000"
