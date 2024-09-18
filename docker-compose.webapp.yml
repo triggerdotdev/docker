@@ -38,6 +38,9 @@ services:
       - default
     ports:
       - 5433:5432
+    command:
+      - -c
+      - wal_level=logical
 
   redis:
     image: redis:${REDIS_IMAGE_TAG:-7}
