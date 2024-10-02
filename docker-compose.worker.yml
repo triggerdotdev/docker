@@ -16,6 +16,8 @@ services:
     user: root
     networks:
       - default
+    ports:
+      - ${DOCKER_PUBLISH_IP:-127.0.0.1}:9021:9020
     env_file:
       - .env
     environment:
@@ -31,7 +33,7 @@ services:
     networks:
       - default
     ports:
-      - 9020:9020
+      - ${DOCKER_PUBLISH_IP:-127.0.0.1}:9020:9020
     env_file:
       - .env
     environment:

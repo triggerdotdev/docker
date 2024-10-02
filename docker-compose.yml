@@ -26,7 +26,7 @@ services:
     environment:
       <<: *webapp-env
     ports:
-      - 3040:3030
+      - ${DOCKER_PUBLISH_IP:-127.0.0.1}:3040:3030
     depends_on:
       - postgres
       - redis
@@ -43,7 +43,7 @@ services:
     networks:
       - webapp
     ports:
-      - 5433:5432
+      - ${DOCKER_PUBLISH_IP:-127.0.0.1}:5433:5432
     command:
       - -c
       - wal_level=logical
@@ -56,7 +56,7 @@ services:
     networks:
       - webapp
     ports:
-      - 6389:6379
+      - ${DOCKER_PUBLISH_IP:-127.0.0.1}:6389:6379
 
   docker-provider:
     image: ghcr.io/triggerdotdev/provider/docker:${TRIGGER_IMAGE_TAG:-v3}
@@ -68,6 +68,8 @@ services:
       - webapp
     depends_on:
       - webapp
+    ports:
+      - ${DOCKER_PUBLISH_IP:-127.0.0.1}:9021:9020
     env_file:
       - .env
     environment:
@@ -85,7 +87,7 @@ services:
     depends_on:
       - webapp
     ports:
-      - 9020:9020
+      - ${DOCKER_PUBLISH_IP:-127.0.0.1}:9020:9020
     env_file:
       - .env
     environment:
@@ -102,4 +104,4 @@ services:
     depends_on:
       - postgres
     ports:
-      - "3061:3000"
+      - ${DOCKER_PUBLISH_IP:-127.0.0.1}:3061:3000
