@@ -20,7 +20,7 @@ services:
     environment:
       <<: *webapp-env
     ports:
-      - ${DOCKER_PUBLISH_IP:-127.0.0.1}:3040:3030
+      - ${WEBAPP_PUBLISH_IP:-127.0.0.1}:3040:3030
     depends_on:
       - postgres
       - redis
