@@ -96,7 +96,7 @@ services:
     image: electricsql/electric:${ELECTRIC_IMAGE_TAG:-latest}
     restart: ${RESTART_POLICY:-unless-stopped}
     environment:
-      DATABASE_URL: $DATABASE_URL
+      DATABASE_URL: ${DATABASE_URL}?sslmode=disable
     networks:
       - webapp
     depends_on:
