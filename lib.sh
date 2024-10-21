@@ -62,6 +62,7 @@ generate_secrets() {
 
     COORDINATOR_SECRET=$(openssl rand -hex 32)
     echo COORDINATOR_SECRET="$COORDINATOR_SECRET"
+
     if [ -z "$env_file" ]; then
         return
     fi
@@ -69,31 +70,31 @@ generate_secrets() {
     if [ ! -f "$env_file" ]; then
         read -p "No $(basename "$env_file") file found, would you like to create one? [Y/n] " yn
         case $yn in
-        [nN]*)
-            echo "Skipping .env file creation."
-            return
-            ;;
-        *)
-            env_example_file=$(dirname "$env_file")/.env.example
-            cp -v "$env_example_file" "$env_file"
+            [nN]* )
+                echo "Skipping .env file creation."
+                return
+                ;;
+            * )
+                env_example_file=$(dirname "$env_file")/.env.example
+                cp -v "$env_example_file" "$env_file"
 
-            echo "Writing secrets to $(basename "$env_file")"
-            write_secrets "$env_file"
-            ;;
+                echo "Writing secrets to $(basename "$env_file")"
+                write_secrets "$env_file"
+                ;;
         esac
     fi
 
     read -p "Would you like to replace your current secrets in $(basename "$env_file")? [Y/n] " yn
 
     case $yn in
-    [nN]*)
-        echo "Skipped writing secrets. You may want to add them manually to $(basename "$env_file")"
-        ;;
-    *)
-        echo "Overwriting secrets in $(basename "$env_file")"
-        cp -v "$env_file" "$env_file.backup"
-        write_secrets "$env_file"
-        echo "Done. Backup written to: $(basename "$env_file").backup"
-        ;;
+        [nN]* )
+            echo "Skipped writing secrets. You may want to add them manually to $(basename "$env_file")"
+            ;;
+        * )
+            echo "Overwriting secrets in $(basename "$env_file")"
+            cp -v "$env_file" "$env_file.backup"
+            write_secrets "$env_file"
+            echo "Done. Backup written to: $(basename "$env_file").backup"
+            ;;
     esac
 }
