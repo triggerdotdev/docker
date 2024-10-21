@@ -35,11 +35,18 @@ generate_secrets() {
     echo COORDINATOR_SECRET="$COORDINATOR_SECRET"
 
     write_secrets() {
-        sed -i "s/MAGIC_LINK_SECRET=.*/MAGIC_LINK_SECRET=$MAGIC_LINK_SECRET/" "$env_file"
-        sed -i "s/SESSION_SECRET=.*/SESSION_SECRET=$SESSION_SECRET/" "$env_file"
-        sed -i "s/ENCRYPTION_KEY=.*/ENCRYPTION_KEY=$ENCRYPTION_KEY/" "$env_file"
-        sed -i "s/PROVIDER_SECRET=.*/PROVIDER_SECRET=$PROVIDER_SECRET/" "$env_file"
-        sed -i "s/COORDINATOR_SECRET=.*/COORDINATOR_SECRET=$COORDINATOR_SECRET/" "$env_file"
+        sed -i '' "s|^MAGIC_LINK_SECRET=.*|MAGIC_LINK_SECRET=$MAGIC_LINK_SECRET|" "$env_file"
+        sed -i '' "s|^SESSION_SECRET=.*|SESSION_SECRET=$SESSION_SECRET|" "$env_file"
+        sed -i '' "s|^ENCRYPTION_KEY=.*|ENCRYPTION_KEY=$ENCRYPTION_KEY|" "$env_file"
+        sed -i '' "s|^PROVIDER_SECRET=.*|PROVIDER_SECRET=$PROVIDER_SECRET|" "$env_file"
+        sed -i '' "s|^COORDINATOR_SECRET=.*|COORDINATOR_SECRET=$COORDINATOR_SECRET|" "$env_file"
+
+        if [ $? -eq 0 ]; then
+            echo "Successfully updated secrets in $env_file"
+        else
+            echo "Error updating secrets. Check if $env_file exists and is writable."
+            return 1
+        fi
     }
 
     if [ -z "$env_file" ]; then
