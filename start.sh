@@ -36,7 +36,10 @@ if [ ! -f "$env_file" ]; then
                     echo "Skipping secret generation. You should really not skip this step."
                     ;;
                 * )
-                    generate_secrets "$env_file"
+                    if ! generate_secrets "$env_file"; then
+                        echo "Failed to generate secrets. Exiting."
+                        exit 1
+                    fi
                     sleep 2
                     ;;
             esac

@@ -14,33 +14,31 @@ docker_compose() {
     set +x
 }
 
-write_secrets() {
-    env_file=$1
-
+sed_cmd() {
     # Determine the sed in-place flag based on the operating system
     if [ "$(uname)" = "Darwin" ]; then
-        sed_cmd() {
-            sed -i '' "$@"
-        }
+        sed -i '' "$@"
     else
-        sed_cmd() {
-            sed -i "$@"
-        }
+        sed -i "$@"
     fi
+}
 
-    # Based on the Operating System, use the appropriate sed command for each secret
-    sed_cmd "s|^MAGIC_LINK_SECRET=.*|MAGIC_LINK_SECRET=$MAGIC_LINK_SECRET|" "$env_file"
-    sed_cmd "s|^SESSION_SECRET=.*|SESSION_SECRET=$SESSION_SECRET|" "$env_file"
-    sed_cmd "s|^ENCRYPTION_KEY=.*|ENCRYPTION_KEY=$ENCRYPTION_KEY|" "$env_file"
-    sed_cmd "s|^PROVIDER_SECRET=.*|PROVIDER_SECRET=$PROVIDER_SECRET|" "$env_file"
-    sed_cmd "s|^COORDINATOR_SECRET=.*|COORDINATOR_SECRET=$COORDINATOR_SECRET|" "$env_file"
+write_secrets() {
+    env_file="$1"
 
-    if [ $? -eq 0 ]; then
-        echo "Successfully updated secrets in $env_file"
-    else
-        echo "Error updating secrets. Check if $env_file exists and is writable."
+    sed_cmd \
+        -e "s|^MAGIC_LINK_SECRET=.*|MAGIC_LINK_SECRET=$MAGIC_LINK_SECRET|" \
+        -e "s|^SESSION_SECRET=.*|SESSION_SECRET=$SESSION_SECRET|" \
+        -e "s|^ENCRYPTION_KEY=.*|ENCRYPTION_KEY=$ENCRYPTION_KEY|" \
+        -e "s|^PROVIDER_SECRET=.*|PROVIDER_SECRET=$PROVIDER_SECRET|" \
+        -e "s|^COORDINATOR_SECRET=.*|COORDINATOR_SECRET=$COORDINATOR_SECRET|" \
+        "$env_file"
+
+    if [ $? -ne 0 ]; then
         return 1
     fi
+
+    echo "Wrote secrets to $(basename "$env_file") and saved backup to $(basename "$env_file").backup"
 }
 
 generate_secrets() {
@@ -79,7 +77,9 @@ generate_secrets() {
                 cp -v "$env_example_file" "$env_file"
 
                 echo "Writing secrets to $(basename "$env_file")"
-                write_secrets "$env_file"
+                if ! write_secrets "$env_file"; then
+                    return 1
+                fi
                 ;;
         esac
     fi
@@ -92,9 +92,9 @@ generate_secrets() {
             ;;
         * )
             echo "Overwriting secrets in $(basename "$env_file")"
-            cp -v "$env_file" "$env_file.backup"
-            write_secrets "$env_file"
-            echo "Done. Backup written to: $(basename "$env_file").backup"
+            if ! write_secrets "$env_file"; then
+                return 1
+            fi
             ;;
     esac
 }
