@@ -38,7 +38,7 @@ write_secrets() {
         return 1
     fi
 
-    echo "Wrote secrets to $(basename "$env_file") and saved backup to $(basename "$env_file").backup"
+    echo "Wrote secrets to $(basename "$env_file")"
 }
 
 generate_secrets() {
@@ -91,6 +91,12 @@ generate_secrets() {
             echo "Skipped writing secrets. You may want to add them manually to $(basename "$env_file")"
             ;;
         * )
+            if ! cp "$env_file" "$env_file.backup"; then
+                echo "Failed to backup $(basename "$env_file")"
+                return 1
+            fi
+            echo "Wrote backup to $(basename "$env_file").backup"
+
             echo "Overwriting secrets in $(basename "$env_file")"
             if ! write_secrets "$env_file"; then
                 return 1
