@@ -97,5 +97,3 @@ generate_secrets() {
         ;;
     esac
 }
-
-generate_secrets ".env"
