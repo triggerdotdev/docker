@@ -2,7 +2,7 @@
 
 If you want to run the Trigger.dev platform yourself, instead of using [our cloud product](https://trigger.dev), you can use this repository to get started.
 
-It's highly recommended you read our [self-hosting guide](https://trigger.dev/docs/open-source-self-hosting), which contains more detailed instructions and will be more up-to-date.
+It's highly recommended you read our [self-hosting guide](https://trigger.dev/docs/self-hosting/docker), which contains more detailed instructions and will be more up-to-date.
 
 ## Local development
 
